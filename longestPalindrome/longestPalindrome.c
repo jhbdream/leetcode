@@ -22,8 +22,6 @@ char * lcs(char * A,char * B,int m,int n)
 	int * L = (int *)malloc((m+1)*(n+1)*sizeof(int));
 	int * P = L;
 
-
-	/*1*/
 	for( i=m; i >= 0; i-- )
 		for( j = n; j >=0; j--)
 		{
@@ -59,91 +57,56 @@ char * lcs(char * A,char * B,int m,int n)
 
 }
 
+
+// string s start from to right 
+// the max length of expand palidrome
+int getPalindromeLength(char * s,int left,int right)
+{
+	int strLength = strlen(s);
+	int l = 0;
+	while( left>=0 && right <=strLength && s[left] == s[right])
+	{
+		left--;
+		right++;
+	}
+
+	return right - left - 1;
+
+}
+
+
 char* longestPalindrome(char* s) {
+	int len1;
+	int len2;
+	int start=0;
+	int end=0;
+	int i;
+	int len;
 
-	char * A = s;
-    int start;
 	int length = strlen(s);
-	int m,n;
-	m = length;
-	n = length;
-	int k = 0;
-	char *B = (char *)malloc(length+1);
-	
-	for( k = 0; k < length ; k++ )
-	{
-		B[k] = A[length-k-1];
-	}
 
-	int i = 0,j=0,l=0;
-//	char * substring = (char *)malloc(max(m,n)+1);
-//    static char  substring[10000];
-	int * L = (int *)malloc((m+1)*(n+1)*sizeof(int));
-//	static int L[8000000];	
+	if(length == 0 || length == 1) return s;
 
+	for(i = 0; i < length; i++){
+		len1 = getPalindromeLength(s,i,i);
+		len2 = getPalindromeLength(s,i,i+1);
 
-	int * P = L;
+		len = (len1>len2)?len1:len2;
 
-
-	/*1*/
-	for( i=m; i >= 0; i-- )
-		for( j = n; j >=0; j--)
-		{
-			if( A[i] == '\0' || B[j] == '\0') L[i*(m+1)+j] = 0;
-			else if(A[i] == B[j] ) L[i*(m+1)+j] = 1 + L[(i+1)*(m+1)+j+1];
-			else L[i*(m+1)+j] = max(L[(i+1)*(m+1)+j],L[i*(m+1)+j+1]);  
-
-		}
-
-
-
-	for(i=0;i<=m;i++)
-	{
-		for(j=0;j<=n;j++)
-		{
-			printf("%d ",L[i*(m+1)+j]);
-		}
-		printf("\n");
-	}
-	// /*2*/
-
-	i = 0; j = 0;l=0;start = -1;
-	while(i < m && j < n)
-	{
-		if(A[i] == B[j] )
-		{
-            if(start == -1)
-                start = i;
-            if(i-start > 1)
-            	start = i;
-            l++;
-            i++;
-			j++;
-		}
-		else if(L[(i+1)*(m+1)+j]>L[(i*(m+1)+j+1)])
-		{
-			i++;
-		}
-		else
-		{
-			j++;
+		if(len > (end - start)){
+			start = i - (len - 1) / 2;
+			end = start + len - 1;
 		}
 	}
 
-	s[l+1] = '\0';
-
-    free(B);
-    free(L);
-    L = NULL;
-    B = NULL;
+	s[end+1] = '\0';
 	return s+start;
-	
 }
 int main(int argc, char const *argv[])
 {
 
-	//char A[] = "civilwartestingwhetherthatnaptionoranynartionsoconceivedandsodedicatedcanlongendureWeareqmetonagreatbattlefiemldoftzhatwarWehavecometodedicpateaportionofthatfieldasafinalrestingplaceforthosewhoheregavetheirlivesthatthatnationmightliveItisaltogetherfangandproperthatweshoulddothisButinalargersensewecannotdedicatewecannotconsecratewecannothallowthisgroundThebravelmenlivinganddeadwhostruggledherehaveconsecrateditfaraboveourpoorponwertoaddordetractTgheworldadswfilllittlenotlenorlongrememberwhatwesayherebutitcanneverforgetwhattheydidhereItisforusthelivingrathertobededicatedheretotheulnfinishedworkwhichtheywhofoughtherehavethusfarsonoblyadvancedItisratherforustobeherededicatedtothegreattdafskremainingbeforeusthatfromthesehonoreddeadwetakeincreaseddevotiontothatcauseforwhichtheygavethelastpfullmeasureofdevotionthatweherehighlyresolvethatthesedeadshallnothavediedinvainthatthisnationunsderGodshallhaveanewbirthoffreedomandthatgovernmentofthepeoplebythepeopleforthepeopleshallnotperishfromtheearth";
-	char A[] = "ABCBC";
+	char A[] = "civilwartestingwhetherthatnaptionoranynartionsoconceivedandsodedicatedcanlongendureWeareqmetonagreatbattlefiemldoftzhatwarWehavecometodedicpateaportionofthatfieldasafinalrestingplaceforthosewhoheregavetheirlivesthatthatnationmightliveItisaltogetherfangandproperthatweshoulddothisButinalargersensewecannotdedicatewecannotconsecratewecannothallowthisgroundThebravelmenlivinganddeadwhostruggledherehaveconsecrateditfaraboveourpoorponwertoaddordetractTgheworldadswfilllittlenotlenorlongrememberwhatwesayherebutitcanneverforgetwhattheydidhereItisforusthelivingrathertobededicatedheretotheulnfinishedworkwhichtheywhofoughtherehavethusfarsonoblyadvancedItisratherforustobeherededicatedtothegreattdafskremainingbeforeusthatfromthesehonoreddeadwetakeincreaseddevotiontothatcauseforwhichtheygavethelastpfullmeasureofdevotionthatweherehighlyresolvethatthesedeadshallnothavediedinvainthatthisnationunsderGodshallhaveanewbirthoffreedomandthatgovernmentofthepeoplebythepeopleforthepeopleshallnotperishfromtheearth";
+	//char A[] = "bb";
 	char * R;
 	//R = lcs(A,B,strlen(A),strlen(B));
 
@@ -152,3 +115,4 @@ int main(int argc, char const *argv[])
 	/* code */
 	return 0;
 }
+
