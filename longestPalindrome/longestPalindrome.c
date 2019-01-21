@@ -115,4 +115,41 @@ int main(int argc, char const *argv[])
 	/* code */
 	return 0;
 }
-
+bool dp[1001][1001];
+char* longestPalindrome(char* s) {
+    if(s == NULL)
+        return NULL;
+    
+    unsigned len = strlen(s);
+    memset(dp, 0, sizeof(dp));
+    
+    int longest = 1;
+    int idx = 0;
+    unsigned i = 0, j = 0;
+    for(; i < len; ++i)
+    {
+        dp[i][i] = true;
+        if(i + 1 < len && s[i] == s[i + 1])
+            dp[i][i + 1] = true;
+    }
+    
+    for(i = len - 1; i < len; --i)
+    {        
+        for(j = i + 1; j < len; ++j)
+        {
+            if(s[i] == s[j] && (j == i + 1 || dp[i + 1][j - 1]))
+            {
+                dp[i][j] = true;
+                int tmp = j - i + 1;
+                if(tmp > longest)
+                {
+                    idx = i;
+                    longest = tmp;
+                }
+            }
+        }
+    }
+    
+    s[idx + longest] = '\0';
+    return s + idx;
+}
